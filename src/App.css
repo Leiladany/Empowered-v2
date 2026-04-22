@@ -1,0 +1,193 @@
+#root {
+  font-family: "Poppins", sans-serif;
+}
+
+/*NavBar*/
+
+.navBar-right {
+  position: relative;
+  bottom: 20px;
+}
+
+/* Homepage */
+.home-section-1 {
+  margin-top: 0px;
+  margin-bottom: -27px;
+  padding-top: 20px;
+  background-color: #f2ebe9;
+}
+
+.home-section-1 h1 {
+  margin-top: 75px;
+  margin-left: 100px;
+  max-width: 50%;
+  font-size: 45px;
+  color: #264143;
+  line-height: 1.1;
+}
+
+.image-group-home {
+  margin-left: -310px;
+  margin-top: 50px;
+}
+
+.homepage-header {
+  display: flex;
+  flex-direction: row;
+}
+
+.home-section-2 h1 {
+  background-color: #5b64cf;
+  color: white;
+  text-align: center;
+  height: 320px;
+  padding-top: 50px;
+  padding-bottom: 50px;
+  padding-right: 400px;
+  padding-left: 400px;
+}
+
+.text-community {
+  margin-top: 10px;
+  line-height: 1.1;
+}
+
+.button-homepage {
+  display: flex;
+  flex-direction: column;
+  max-width: fit-content;
+  margin-top: 80px;
+  margin-left: 100px;
+  padding-right: 86px;
+  text-align: center;
+}
+
+.button-home-margin {
+  margin-bottom: 20px;
+}
+
+.home-section-3 {
+  height: 400px;
+}
+
+.button-about {
+  background-color: #f7e38d;
+  color: #5b64cf;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.container-section-3 {
+  display: flex;
+  text-align: center;
+  justify-content: space-evenly;
+  margin-top: 60px;
+}
+
+.box-3 {
+  width: 400px;
+  text-align: center;
+}
+
+.box-3 h2 {
+  margin-bottom: 4px;
+}
+.box-3 p {
+  text-align: justify;
+}
+
+.image-reading-home {
+  margin-top: 0px;
+}
+
+.position-margin {
+  margin-top: 0px;
+}
+
+/* Footer */
+
+.section-footer {
+  background-color: #eddcd9;
+  color: grey;
+  height: 150px;
+}
+
+.container-footer {
+  display: flex;
+  justify-content: space-around;
+}
+
+.container-footer p {
+  padding-top: 20px;
+  font-size: 14px;
+}
+
+.footer-about-follow {
+  text-decoration: none;
+  color: grey;
+}
+.positioning-about-follow {
+  padding-top: 30px;
+}
+
+.navbar-section-outer {
+  height: 80px;
+  background-color: #eddcd9;
+}
+
+.navbar-section-inner {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.navbar-comp-style {
+  text-decoration: none;
+  font-size: 13px;
+  color: #264143;
+  margin-left: 30px;
+  margin-top: 200px;
+}
+
+.style-logo {
+  position: relative;
+  left: 120px;
+}
+
+.resource-section {
+  display: flex;
+  justify-content: center;
+}
+
+.image-resource {
+  margin-top: 70px;
+}
+
+/* Info Page */
+
+.info-section {
+  height: 100px;
+  background-color: #f2ebe9;
+}
+
+.info-card {
+  box-shadow: 0 6px 8px 0 rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+  width: 400px;
+  height: 500px;
+  margin: 30px;
+  background-color: white;
+}
+
+.info-container {
+  background-color: #f2ebe9;
+}
+
+.info-container-text {
+  margin: 30px;
+  text-align: justify;
+}
+
+.info-container-text p {
+  font-size: 10px;
+}
