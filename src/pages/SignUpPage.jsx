@@ -1,14 +1,13 @@
 import {
+  Anchor,
   Box,
   Button,
+  Checkbox,
   PasswordInput,
   Text,
   TextInput,
-  Anchor,
-  Checkbox,
   Title,
-  Center,
-  rem, 
+  rem,
 } from "@mantine/core";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -28,9 +27,9 @@ const SignupPage = () => {
 
     try {
       signUp({
-        username: username,
-        email: email,
-        password: password,
+        username,
+        email,
+        password,
       });
 
       setErrorMessage(undefined);
@@ -41,91 +40,75 @@ const SignupPage = () => {
   };
 
   return (
+    <div className="auth-page">
+      <Box component="form" className="auth-card" onSubmit={handleSubmit}>
+        <Title order={1} className="auth-title">
+          Signup
+        </Title>
 
-    <Box
-      sx={{
-        margin: "0 auto",
-        maxWidth: "400px",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        height: "calc(100vh - 100px)",
-      }}
-    >
-
-
-      <Center maw={400} h={100} mx="auto">
-        <Title order={1}>Signup</Title>
-      </Center>
-      
-      <Box
-        component="form"
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "20px",
-          marginTop: "2rem",
-        }}
-        onSubmit={handleSubmit}
-      >
-        <TextInput
-          label="Username"
-          variant="filled"
-          withAsterisk
-          value={username}
-          required
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <TextInput
-          label="Email"
-          variant="filled"
-          withAsterisk
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-
-        <PasswordInput
-          label="Password"
-          variant="filled"
-          withAsterisk
-          value={password}
-          required
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <Checkbox label="I accept terms & conditions" mt="sm" />
-        <Center maw={800} h={40} mx="auto">
-        <Text fz="sm" color="red.8">
-          {errorMessage}
-        </Text>
-        </Center>
-        <Button
-          type="submit"
-          variant="gradient"
-          gradient={{ from: "#ff9c6b", to: "#e34f4f", deg: 60 }}
-          sx={{ marginTop: "1rem", alignSelf: "center" }}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "20px",
+          }}
         >
-          Register
-        </Button>
+          <TextInput
+            label="Username"
+            variant="filled"
+            withAsterisk
+            value={username}
+            required
+            onChange={(event) => setUsername(event.target.value)}
+          />
+          <TextInput
+            label="Email"
+            variant="filled"
+            withAsterisk
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+          />
 
-        <Center maw={700} h={70} mx="auto">
-          <Text td="underline" fz="sm">
-            Already have account?
+          <PasswordInput
+            label="Password"
+            variant="filled"
+            withAsterisk
+            value={password}
+            required
+            onChange={(event) => setPassword(event.target.value)}
+          />
+          <Checkbox label="I accept terms & conditions" mt="sm" />
+          <Text fz="sm" color="red.8" align="center">
+            {errorMessage}
           </Text>
-          </Center>
+          <Button
+            type="submit"
+            variant="gradient"
+            gradient={{ from: "#ff9c6b", to: "#e34f4f", deg: 60 }}
+            sx={{ marginTop: "1rem", alignSelf: "center" }}
+          >
+            Register
+          </Button>
 
-          <Center maw={700} h={10} mx="auto">
-          <Anchor color="#ff9c6b" component={Link} to="/login">
-            <Center inline>
-              <Box ml={5} fw={700} fz="sm">
-                Go to Login
+          <div className="auth-link-row">
+            <Text td="underline" fz="sm">
+              Already have account?
+            </Text>
+          </div>
+
+          <div className="auth-link-row">
+            <Anchor color="#ff9c6b" component={Link} to="/login">
+              <Box sx={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                <Box fw={700} fz="sm">
+                  Go to Login
+                </Box>
+                <IconArrowRight size={rem(16)} />
               </Box>
-              <IconArrowRight size={rem(16)} />
-            </Center>
-          </Anchor>
-          </Center>
-
+            </Anchor>
+          </div>
+        </Box>
       </Box>
-    </Box>
+    </div>
   );
 };
 

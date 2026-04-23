@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Button, Card, Group, Input, Text, Textarea } from "@mantine/core";
+import { Button, Card, Input, Text, Textarea } from "@mantine/core";
 import { SessionContext } from "../contexts/SessionContext";
 import {
   createComment,
@@ -29,18 +29,6 @@ function Post({ post, setPosts, posts, fetchPosts }) {
 
   function fetchComments() {
     setComments(getComments(post._id));
-  }
-
-  function handleNewTitleChange(event) {
-    setNewTitle(event.target.value);
-  }
-
-  function handleNewContentChange(event) {
-    setNewContent(event.target.value);
-  }
-
-  function handleEditPost() {
-    setIsEditing(true);
   }
 
   function handleSavePost(event) {
@@ -92,10 +80,6 @@ function Post({ post, setPosts, posts, fetchPosts }) {
     }
   }
 
-  function handleCommentContentChange(event) {
-    setCommentContent(event.target.value);
-  }
-
   const options = {
     weekday: "long",
     year: "numeric",
@@ -103,90 +87,44 @@ function Post({ post, setPosts, posts, fetchPosts }) {
     day: "numeric",
   };
 
-  const date = new Date(post.createdAt);
-
   return (
-    <Card
-      shadow="sm"
-      padding="sm"
-      style={{
-        margin: "70px 100px 20px",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Group spacing="lg" direction="row">
-        <div
-          style={{
-            margin: "20px",
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-            alignContent: "center",
-          }}
-        >
-          <div>
-            <img
-              width={100}
-              src="../../images/loudspeaker.png"
-              alt="profile avatar"
-              style={{ borderRadius: "50%" }}
-            />
-          </div>
+    <Card shadow="sm" padding="sm" className="post-shell">
+      <div className="post-main">
+        <div className="post-icon-wrap">
+          <img
+            className="post-icon"
+            src="../../images/loudspeaker.png"
+            alt="post icon"
+          />
+        </div>
 
+        <div>
           {isEditing ? (
-            <form onSubmit={handleSavePost}>
+            <form onSubmit={handleSavePost} className="post-editor">
               <Input
                 type="text"
                 id="newTitle"
                 value={newTitle}
-                onChange={handleNewTitleChange}
-                style={{ width: "350px", margin: "15px" }}
+                onChange={(event) => setNewTitle(event.target.value)}
               />
               <Textarea
                 id="newContent"
                 value={newContent}
-                onChange={handleNewContentChange}
+                onChange={(event) => setNewContent(event.target.value)}
                 autosize
                 minRows={4}
-                style={{ width: "600px", margin: "15px" }}
               />
-              <Button
-                type="submit"
-                style={{ backgroundColor: "#5b64cf", margin: "15px" }}
-                variant="filled"
-              >
+              <Button type="submit" color="indigo" variant="filled">
                 Save post
               </Button>
             </form>
           ) : (
-            <Card
-              shadow="sm"
-              padding="sm"
-              style={{
-                display: "block",
-                width: "600px",
-                margin: "40px",
-              }}
-            >
-              <Text
-                size="lg"
-                color="indigo"
-                weight={900}
-                style={{ marginBottom: "20px" }}
-              >
+            <Card shadow="sm" padding="sm" className="post-body-card">
+              <Text size="lg" color="indigo" weight={900} mb={20}>
                 {post.title}
               </Text>
 
-              <Text
-                size="md"
-                color="indigo"
-                weight={700}
-                style={{ marginBottom: "10px" }}
-              >
+              <Text size="md" color="indigo" weight={700} mb={10}>
                 {post.content}
               </Text>
 
@@ -198,25 +136,15 @@ function Post({ post, setPosts, posts, fetchPosts }) {
               </Text>
 
               <Text size="sm" color="dimmed" weight="thin">
-                created {date.toLocaleDateString("en-US", options)}
+                created {new Date(post.createdAt).toLocaleDateString("en-US", options)}
               </Text>
 
               {post.author && post.author._id === user?._id ? (
-                <div>
-                  <Button
-                    onClick={handleEditPost}
-                    variant="outline"
-                    color="indigo"
-                    style={{ margin: "10px" }}
-                  >
+                <div className="post-actions">
+                  <Button onClick={() => setIsEditing(true)} variant="outline" color="indigo">
                     edit post
                   </Button>
-                  <Button
-                    onClick={handleDeletePost}
-                    variant="outline"
-                    color="indigo"
-                    style={{ margin: "10px" }}
-                  >
+                  <Button onClick={handleDeletePost} variant="outline" color="indigo">
                     delete
                   </Button>
                 </div>
@@ -224,14 +152,14 @@ function Post({ post, setPosts, posts, fetchPosts }) {
             </Card>
           )}
         </div>
-      </Group>
+      </div>
 
-      <Card shadow="sm" padding="sm" style={{ marginBottom: "1rem" }}>
-        <Group direction="column" style={{ display: "block" }}>
-          <Text size="sm" color="pink">
-            replies
-          </Text>
+      <Card shadow="sm" padding="sm" className="post-comments-card">
+        <Text size="sm" color="pink" mb={12}>
+          replies
+        </Text>
 
+        <div className="post-comment-list">
           {comments.map((comment) => (
             <Comment
               key={comment._id}
@@ -242,35 +170,30 @@ function Post({ post, setPosts, posts, fetchPosts }) {
               post={post}
             />
           ))}
-        </Group>
+        </div>
 
         <form
           method="POST"
           action="/posts/:postId/createcomment"
           onSubmit={handleCreateComment}
-          style={{ margin: "30px" }}
+          className="post-comment-form"
         >
           <Textarea
             id="content"
             autosize
             minRows={3}
-            style={{ width: "400px", margin: "10px" }}
             value={commentContent}
-            onChange={handleCommentContentChange}
+            onChange={(event) => setCommentContent(event.target.value)}
             placeholder="start writing a reply here"
           />
 
-          <Button
-            type="submit"
-            style={{ backgroundColor: "gray", margin: "10px" }}
-            variant="filled"
-          >
+          <Button type="submit" color="gray" variant="filled">
             submit reply
           </Button>
         </form>
 
         {errorMessage ? (
-          <Text color="red" size="sm" style={{ margin: "0 10px 10px" }}>
+          <Text color="red" size="sm">
             {errorMessage}
           </Text>
         ) : null}

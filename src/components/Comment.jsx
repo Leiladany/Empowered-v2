@@ -19,14 +19,6 @@ function Comment({ comment, setComments, comments, fetchComments, post }) {
     }
   }
 
-  function handleNewCommentContentChange(event) {
-    setNewCommentContent(event.target.value);
-  }
-
-  function handleEditComment() {
-    setIsEditingComment(true);
-  }
-
   function handleSaveComment(selectedComment) {
     try {
       updateComment(
@@ -54,23 +46,18 @@ function Comment({ comment, setComments, comments, fetchComments, post }) {
   };
 
   return (
-    <Card
-      padding="sm"
-      style={{
-        display: "block",
-        margin: "20px",
-      }}
-    >
+    <Card padding="sm" className="comment-card">
       {isEditingComment ? (
         <>
           <Input
             id={`newCommentContent-${comment._id}`}
             value={newCommentContent}
-            onChange={handleNewCommentContentChange}
+            onChange={(event) => setNewCommentContent(event.target.value)}
           />
           <Button
-            style={{ backgroundColor: "gray" }}
+            mt={10}
             variant="filled"
+            color="gray"
             onClick={() => handleSaveComment(comment)}
           >
             save
@@ -78,26 +65,19 @@ function Comment({ comment, setComments, comments, fetchComments, post }) {
         </>
       ) : (
         <>
-          <Text size="lg" color="pink" weight="bold" style={{ width: "400px" }}>
+          <Text size="lg" color="pink" weight="bold" className="comment-content">
             {comment.content}
           </Text>
           <Text size="sm" color="yellow" weight="extralight">
-            by{" "}
-            {comment.author ? comment.author.username : "deleted user account"}
+            by {comment.author ? comment.author.username : "deleted user account"}
           </Text>
           <Text size="sm" color="dimmed" weight="thin">
-            created{" "}
-            {new Date(comment.createdAt).toLocaleDateString(undefined, options)}
+            created {new Date(comment.createdAt).toLocaleDateString(undefined, options)}
           </Text>
 
           {comment.author && comment.author._id === user?._id ? (
-            <div>
-              <Button
-                onClick={handleEditComment}
-                variant="outline"
-                color="gray"
-                style={{ margin: "10px" }}
-              >
+            <div className="comment-actions">
+              <Button onClick={() => setIsEditingComment(true)} variant="outline" color="gray">
                 edit reply
               </Button>
               <Button
@@ -113,7 +93,7 @@ function Comment({ comment, setComments, comments, fetchComments, post }) {
       )}
 
       {errorMessage ? (
-        <Text color="red" size="sm" style={{ marginTop: "10px" }}>
+        <Text color="red" size="sm" mt={10}>
           {errorMessage}
         </Text>
       ) : null}
