@@ -1,103 +1,107 @@
-import React, { useContext , useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { Badge, Box, Button, Text, TextInput } from "@mantine/core";
 import { SessionContext } from "../contexts/SessionContext";
-import { Button, Badge, Box, TextInput
-} from "@mantine/core";
-import { baseURL } from "../apiURLs";
+import { updateUserProfile } from "../services/demoStore";
 
 function UpdatePage() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
-  const {token , setUser, user} = useContext(SessionContext)
+  const [errorMessage, setErrorMessage] = useState("");
+  const { setUser, user } = useContext(SessionContext);
   const navigate = useNavigate();
 
-    //handle Button Update 
-    const handleUpdate = async (event) => {
-        event.preventDefault();
-        console.log("updated Username:", username)
+  useEffect(() => {
+    if (user) {
+      setUsername(user.username);
+      setEmail(user.email);
+    }
+  }, [user]);
 
-        try {
-          const response = await axios.put(`${baseURL.production}/auth/update/${user._id}`, {
-            username: username,
-            email: email,
-          } ,{headers: {
-            authorization: `Bearer ${token}`
-        }},);
+  const handleUpdate = (event) => {
+    event.preventDefault();
 
-          console.log(response.data);
-          setUser(response.data);
+    try {
+      const updatedUser = updateUserProfile(user._id, {
+        username,
+        email,
+      });
 
-          navigate('/profile');
-        } catch (error) {
-          console.log("Error: ", error);
-        };
-      };
+      setUser(updatedUser);
+      setErrorMessage("");
+      navigate("/profile");
+    } catch (error) {
+      setErrorMessage(error.message);
+    }
+  };
 
   return (
     <Box
-        component="form"
-        sx={{
-          margin: "0 auto",
+      component="form"
+      sx={{
+        margin: "0 auto",
         maxWidth: "300px",
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
         height: "calc(100vh - 100px)",
+      }}
+      onSubmit={handleUpdate}
+    >
+      <Badge
+        sx={{
+          margin: "0 auto",
+          textTransform: "none",
+          color: "blue",
         }}
+        size="xl"
+        color="pink"
       >
+        username
+      </Badge>
 
-{/* username */}
-          <Badge 
-                  sx={{ 
-                    margin: "0 auto",
-                    textTransform: "none",
-                    color: "blue",
-                    }}
-                  size="xl"
-                  color="pink"
-                >
-                    username
-                </Badge>
+      <TextInput
+        value={username}
+        variant="filled"
+        onChange={(event) => setUsername(event.target.value)}
+        sx={{ margin: "10px 30px 50px" }}
+      />
 
-            <TextInput
-              value={username}
-              variant="filled"
-              onChange={(e) => setUsername( e.target.value )}
-              sx={{ margin:"10px 30px 50px" }}
-            />
-{/* end of username */}
+      <Badge
+        sx={{
+          margin: "0 auto",
+          textTransform: "none",
+          color: "blue",
+        }}
+        size="xl"
+        color="pink"
+      >
+        email
+      </Badge>
 
-{/* email */}
-        <Badge 
-              sx={{ 
-                margin: "0 auto",
-                textTransform: "none",
-                color: "blue"
-                }}
-              size="xl"
-              color="pink"
-            >
-                email
-            </Badge>
+      <TextInput
+        type="email"
+        variant="filled"
+        value={email}
+        onChange={(event) => setEmail(event.target.value)}
+        sx={{ margin: "10px" }}
+      />
 
-        <TextInput
-          type="email"
-          variant="filled"
-          value={email}
-          onChange={(e) => setEmail( e.target.value )}
-          sx={{ margin:"10px" }}
-        />
-{/* end of email */}
+      <Button
+        type="submit"
+        variant="gradient"
+        gradient={{ from: "#ed6ea0", to: "indigo", deg: 35 }}
+        style={{ margin: "40px", alignSelf: "center" }}
+      >
+        update
+      </Button>
 
-        <Button type="submit"
-              variant="gradient" 
-              gradient={{ from: '#ed6ea0', to: 'indigo', deg: 35 }}
-              style={{ margin:"40px",  alignSelf: "center" }}
-              onClick={handleUpdate}
-        >update</Button>
-
-    </Box>    
+      {errorMessage ? (
+        <Text align="center" color="red">
+          {errorMessage}
+        </Text>
+      ) : null}
+    </Box>
   );
 }
 

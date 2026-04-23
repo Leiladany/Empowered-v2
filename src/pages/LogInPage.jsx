@@ -6,11 +6,10 @@ import {
   TextInput,
   Title, Center
 } from "@mantine/core";
-import axios from "axios";
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { SessionContext } from "../contexts/SessionContext";
-import { baseURL } from "../apiURLs";
+import { logIn } from "../services/demoStore";
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
@@ -19,21 +18,21 @@ const LoginPage = () => {
   const [errorMessage, setErrorMessage] = useState(undefined);
   const navigate = useNavigate();
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
-    console.log('hello')
+
     try {
-      const response = await axios.post(`${baseURL.production}/auth/login`, {
+      const response = logIn({
         username: username,
         password: password,
       });
-      setToken(response.data.token);
-      setUser(response.data.foundUser)
-      console.log(response.data)
+
+      setToken(response.token);
+      setUser(response.foundUser);
+      setErrorMessage(undefined);
       navigate("/profile");
     } catch (error) {
-      setErrorMessage(error.response.data.errorMessage);
-      console.log(error);
+      setErrorMessage(error.message);
     }
   };
 
@@ -57,7 +56,7 @@ const LoginPage = () => {
           gap: "20px",
           marginTop: "2rem",
         }}
-
+        onSubmit={handleSubmit}
       >
         <TextInput
           label="Username"
@@ -78,7 +77,6 @@ const LoginPage = () => {
           variant="gradient"
           gradient={{ from: "#ff9c6b", to: "#e34f4f", deg: 60 }}
           sx={{ marginTop: "1rem", alignSelf: "center" }}
-          onClick={handleSubmit}
         >
           Connect
         </Button>

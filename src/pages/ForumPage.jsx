@@ -1,39 +1,40 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useContext } from 'react';
 import { SessionContext } from '../contexts/SessionContext';
-import { Text, Button, Input, Group } from '@mantine/core';
+import { Text, Button, Input, Group, Textarea } from '@mantine/core';
 import Post from '../components/Post';
-import { baseURL } from "../apiURLs";
+import { createPost, getPosts } from "../services/demoStore";
 
 function ForumPage() {
     const [posts, setPosts] = useState([]);
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
-    const {token} = useContext(SessionContext);
+    const [errorMessage, setErrorMessage] = useState("");
+    const { user } = useContext(SessionContext);
 
     useEffect(() => {
         fetchPosts();
     }, []);
 
-    async function fetchPosts() {
-        const response = await axios.get(`${baseURL.production}/forum/posts`);
-        setPosts(response.data);
+    function fetchPosts() {
+        setPosts(getPosts());
     }
 
-    async function handleCreatePost(e) {
+    function handleCreatePost(e) {
         e.preventDefault();
 
-console.log(token);
-
         try {
-        await axios.post(`${baseURL.production}/forum/createpost`, { title, content }, {headers: { authorization: `Bearer ${token}`  } }
-        );
-        setTitle('');
-        setContent('');
-        fetchPosts();
+            createPost({
+                title,
+                content,
+                authorId: user?._id,
+            });
+            setTitle('');
+            setContent('');
+            setErrorMessage("");
+            fetchPosts();
         } catch (error) {
-            console.log(error);
+            setErrorMessage(error.message);
         }
     }
 
@@ -44,10 +45,6 @@ console.log(token);
     function handleContentChange(e) {
         setContent(e.target.value);
     }
-
-    useEffect(()=> {
-        console.log(posts)
-    }, [posts])
 
     function scrollToTop() {
         window.scrollTo({ top: 0, behavior: "smooth" });
@@ -97,11 +94,12 @@ console.log(token);
                                 style={{width:'350px', margin:"15px"}}
                             />
 
-                            <Input
+                            <Textarea
                                 id="content"
-                                type="textarea"
                                 value={content}
                                 onChange={handleContentChange}
+                                autosize
+                                minRows={4}
                                 style={{width:'600px', margin:"15px"}}
                                 placeholder="start writing the details here"
                             />
@@ -119,6 +117,17 @@ console.log(token);
                     </Group>
                 </form>
 
+                {errorMessage ? (
+                    <Text color="red" style={{ margin: "0 215px 20px" }}>
+                        {errorMessage}
+                    </Text>
+                ) : null}
+
+                {posts.length === 0 ? (
+                    <Text align="center" style={{ color: "#5b64cf", marginTop: "40px" }}>
+                        No posts yet. Create the first one for this demo.
+                    </Text>
+                ) : null}
 
                 {posts.map((post) => (
                     <Post key={post._id} post={post} setPosts={setPosts} posts={posts} fetchPosts={fetchPosts} />

@@ -5,6 +5,10 @@ import { SessionContext } from '../contexts/SessionContext'
 function PrivateRoute({children}) {
   const { isLoading, isAuthenticated } = useContext(SessionContext);
 
+  if (isLoading) {
+    return null;
+  }
+
   if (!isLoading && !isAuthenticated) {
     return <Navigate to="/login" />
   }

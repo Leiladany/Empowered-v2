@@ -10,14 +10,12 @@ import {
   Center,
   rem, 
 } from "@mantine/core";
-import axios from "axios";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { IconArrowRight, IconAlertCircle } from "@tabler/icons-react";
-import { baseURL } from "../apiURLs";
+import { Link, useNavigate } from "react-router-dom";
+import { IconArrowRight } from "@tabler/icons-react";
+import { signUp } from "../services/demoStore";
 
 const SignupPage = () => {
-  console.log(baseURL)
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
@@ -25,18 +23,20 @@ const SignupPage = () => {
 
   const navigate = useNavigate();
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
+
     try {
-      await axios.post(`${baseURL.production}/auth/signup`, {
+      signUp({
         username: username,
         email: email,
         password: password,
       });
+
+      setErrorMessage(undefined);
       navigate("/login");
     } catch (error) {
-     // setErrorMessage(error.response.data.errorMessage);
-      console.log(error);
+      setErrorMessage(error.message);
     }
   };
 
@@ -94,7 +94,7 @@ const SignupPage = () => {
         />
         <Checkbox label="I accept terms & conditions" mt="sm" />
         <Center maw={800} h={40} mx="auto">
-        <Text fz="sm" color="red.8" icon={<IconAlertCircle size="1rem" />}>
+        <Text fz="sm" color="red.8">
           {errorMessage}
         </Text>
         </Center>
@@ -114,7 +114,7 @@ const SignupPage = () => {
           </Center>
 
           <Center maw={700} h={10} mx="auto">
-          <Anchor color="#ff9c6b" href="/login">
+          <Anchor color="#ff9c6b" component={Link} to="/login">
             <Center inline>
               <Box ml={5} fw={700} fz="sm">
                 Go to Login
